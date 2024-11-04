@@ -1,0 +1,20 @@
+# 빌드 파일
+App/build/
+App/app/build/
+App/captures/
+App/.externalNativeBuild/
+App/.cxx/
+
+# 로컬 환경 설정 파일
+.idea/
+.gradle/
+local.properties
+*.iml
+
+# 캐시 파일
+.DS_Store
+*.log
+*.tmp
+*.temp
+
+
