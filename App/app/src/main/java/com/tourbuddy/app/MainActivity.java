@@ -14,11 +14,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        if (!isLoggedIn()) {
+            // TODO: 로그인 액티비티로 전환하는 코드
+        }
+
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+    }
+
+    /**
+     * 앱을 실행했을 때 로그인한 상태인지 확인하는 메소드
+     *
+     * @return 로그인 여부
+     */
+    private boolean isLoggedIn() {
+        // TODO: 로그인 상태 확인 코드 구현
+
+        return false;
     }
 }
