@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    // Google services gradle plugin 추가
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -32,6 +34,8 @@ android {
 }
 
 dependencies {
+    // Firebase BoM 불러오기
+    implementation(platform(libs.firebase.bom))
 
     implementation(libs.appcompat)
     implementation(libs.material)
