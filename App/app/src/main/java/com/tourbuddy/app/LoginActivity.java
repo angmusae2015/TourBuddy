@@ -8,16 +8,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-// import com.tourbuddy.app.databinding.LoginBinding;
+import com.tourbuddy.app.databinding.LoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
-    // private LoginBinding binding;
+    private LoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // binding = LoginBinding.inflate(getLayoutInflater());
+        binding = LoginBinding.inflate(getLayoutInflater());
 
-        // setContentView(binding.getRoot());
+        setContentView(binding.getRoot());
     }
 }
