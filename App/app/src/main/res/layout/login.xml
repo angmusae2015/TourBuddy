@@ -19,13 +19,13 @@
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/next_button"
+            android:id="@+id/login_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancel_button"
+            android:id="@+id/signUp_button1"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
