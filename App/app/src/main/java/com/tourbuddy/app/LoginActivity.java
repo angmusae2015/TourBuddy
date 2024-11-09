@@ -1,6 +1,7 @@
 package com.tourbuddy.app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
@@ -50,8 +51,18 @@ public class LoginActivity extends AppCompatActivity {
                 TextInputLayout idField = binding.idField;
                 TextInputLayout passwordField = binding.passwordField;
 
-                String id = idField.getEditText().toString();
-                String password = passwordField.getEditText().toString();
+                String id = idField.getEditText().getText().toString();
+                String password = passwordField.getEditText().getText().toString();
+
+                if (id.isEmpty()) {
+                    idField.setError("ID를 입력하세요.");
+                    return;
+                }
+
+                if (password.isEmpty()) {
+                    passwordField.setError("비밀번호를 입력하세요.");
+                    return;
+                }
 
                 loginResult = login(id, password);
 
