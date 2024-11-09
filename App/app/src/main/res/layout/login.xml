@@ -11,7 +11,7 @@
 
 
     <LinearLayout
-        android:id="@+id/textField"
+        android:id="@+id/textFieldContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -51,7 +51,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/loginField"
+        android:id="@+id/buttonContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
