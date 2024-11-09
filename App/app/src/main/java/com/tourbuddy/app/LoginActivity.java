@@ -2,8 +2,10 @@ package com.tourbuddy.app;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,11 +64,22 @@ public class LoginActivity extends AppCompatActivity {
          * 로그인 버튼을 눌렀을 때 요소들의 애니메이션을 실행하는 코드
          */
         private void animate() {
-            TextInputLayout idField = binding.idField;
-            TextInputLayout passwordField = binding.passwordField;
+            LinearLayout buttonContainer = binding.buttonContainer;
+            LinearLayout textFieldContainer = binding.textFieldContainer;
 
-            // TODO: 로그인/회원가입 버튼 아래로 이동 애니메이션
-            // TODO: 아이디/비밀번호 입력 등장 애니메이션
+            buttonContainer.animate()
+                .translationY(250)
+                .setDuration(500)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> {
+                    textFieldContainer.setVisibility(View.VISIBLE);
+                    textFieldContainer.setAlpha(0);
+
+                    textFieldContainer.animate()
+                        .alpha(1f)
+                        .setDuration(300)
+                        .start();
+                }).start();
         }
 
         /**
