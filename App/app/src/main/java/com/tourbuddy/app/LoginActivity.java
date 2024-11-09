@@ -61,20 +61,21 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         /**
-         * 로그인 버튼을 눌렀을 때 요소들의 애니메이션을 실행하는 코드
+         * 로그인 버튼을 눌렀을 때 요소들의 애니메이션을 실행하는 함수
          */
         private void animate() {
             LinearLayout buttonContainer = binding.buttonContainer;
             LinearLayout textFieldContainer = binding.textFieldContainer;
 
+            // 버튼이 아래쪽으로 이동하는 애니메이션
             buttonContainer.animate()
                 .translationY(250)
                 .setDuration(500)
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .withEndAction(() -> {
+                    // 버튼의 이동이 끝난 후 실행할 입력 필드 등장 애니메이션
                     textFieldContainer.setVisibility(View.VISIBLE);
                     textFieldContainer.setAlpha(0);
-
                     textFieldContainer.animate()
                         .alpha(1f)
                         .setDuration(300)
