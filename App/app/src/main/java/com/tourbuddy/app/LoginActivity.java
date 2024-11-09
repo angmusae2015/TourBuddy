@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = LoginBinding.inflate(getLayoutInflater());
 
         Button loginButton = binding.loginButton;
-        Button signInButton = binding.signInButton;
+        Button signInButton = binding.signUpButton;
 
         loginButton.setOnClickListener(new LoginButtonClickListener());
         signInButton.setOnClickListener(new SignInButtonClickListener());
