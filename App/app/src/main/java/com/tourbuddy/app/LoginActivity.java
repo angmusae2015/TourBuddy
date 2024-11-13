@@ -1,5 +1,6 @@
 package com.tourbuddy.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,11 +10,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tourbuddy.app.databinding.LoginBinding;
 
@@ -21,10 +29,21 @@ public class LoginActivity extends AppCompatActivity {
     private LoginBinding binding;
     private int state;
 
+    // 회원가입 액티비티를 실행하는 Launcher
+    private ActivityResultLauncher<Intent> signupLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = LoginBinding.inflate(getLayoutInflater());
+
+        signupLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult o) {
+                    // TODO: 회원가입 성공 후 실행할 코드
+                }
+            });
 
         Button loginButton = binding.loginButton;
         Button signInButton = binding.signUpButton;
@@ -111,8 +130,8 @@ public class LoginActivity extends AppCompatActivity {
     class SignInButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            // TODO: 로그인 버튼 비활성화
-            // TODO: 아이디 입력, 아이디 중복 확인 버튼, 비번 입력, 비번 확인 입력 활성화
+            // 회원가입 액티비티로 전환
+            signupLauncher.launch(new Intent(LoginActivity.this, SignUpActivity.class));
         }
     }
 }
