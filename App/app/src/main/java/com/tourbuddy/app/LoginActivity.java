@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                 TextInputLayout idField = binding.idField;
                 TextInputLayout passwordField = binding.passwordField;
 
-                String id = idField.getEditText().getText().toString();
-                String password = passwordField.getEditText().getText().toString();
+                String id = Util.getTextFromTextInputLayout(idField);
+                String password = Util.getTextFromTextInputLayout(passwordField);
 
                 if (id.isEmpty()) {
                     idField.setError("ID를 입력하세요.");
