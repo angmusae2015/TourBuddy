@@ -70,15 +70,14 @@ public class LoginActivity extends AppCompatActivity {
 
             // 로그인 화면에서 클릭한 경우
             else if (state == 1) {
-                int loginResult;
-                TextInputLayout idField = binding.idField;
+                TextInputLayout emailField = binding.emailField;
                 TextInputLayout passwordField = binding.passwordField;
 
-                String id = Util.getTextFromTextInputLayout(idField);
+                String email = Util.getTextFromTextInputLayout(emailField);
                 String password = Util.getTextFromTextInputLayout(passwordField);
 
-                if (id.isEmpty()) {
-                    idField.setError("ID를 입력하세요.");
+                if (email.isEmpty()) {
+                    emailField.setError("이메일 주소를 입력하세요.");
                     return;
                 }
 
@@ -86,10 +85,6 @@ public class LoginActivity extends AppCompatActivity {
                     passwordField.setError("비밀번호를 입력하세요.");
                     return;
                 }
-
-                loginResult = login(id, password);
-
-                // TODO: 로그인 결과에 따라 실행할 코드
             }
 
         }
@@ -118,15 +113,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         /**
-         * 입력받은 ID와 비밀번호로 서버에 로그인을 시도하는 메소드. 결과에 따라 0, 1, 2 세 가지 값을 반환함
-         * @param id 사용자가 입력한 ID
+         * 입력받은 ID와 비밀번호로 서버에 로그인을 시도하는 메소드.
+         * @param email 사용자가 입력한 이메일 주소
          * @param password 사용자가 입력한 비밀번호
-         * @return 성공적으로 로그인한 경우 0, 존재하지 않는 ID일 경우 1, 비밀번호가 틀렸을 경우 2를 반환함
          */
-        private int login(String id, String password) {
+        private void login(String email, String password) {
             // TODO: 서버와 통신해 로그인하는 코드
-
-            return 0;
         }
     }
 

@@ -63,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
     class SignUpButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            TextInputLayout emailField = binding.idField;
+            TextInputLayout emailField = binding.emailField;
             TextInputLayout passwordField = binding.passwordField;
             TextInputLayout passwordTeField = binding.passwordTe;
 
