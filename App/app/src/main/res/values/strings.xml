@@ -7,4 +7,5 @@
     <string name="username">아이디</string>
     <string name="password1">비밀번호</string>
     <string name="password2">비밀번호 다시 입력</string>
+
 </resources>
