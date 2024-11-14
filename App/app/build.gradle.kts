@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    // Google services gradle plugin 추가
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -29,13 +31,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
     viewBinding {
-        enable = true
+        enable = true;
     }
 }
 
 dependencies {
+    // Firebase BoM 불러오기
+    implementation(platform(libs.firebase.bom))
 
     implementation(libs.appcompat)
     implementation(libs.material)

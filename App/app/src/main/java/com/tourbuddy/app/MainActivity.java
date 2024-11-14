@@ -1,34 +1,53 @@
 package com.tourbuddy.app;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import com.tourbuddy.app.databinding.ActivityMainBinding;
-import android.view.View;
+
+import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
 
-        // View Binding 설정
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult o) {
+                    if (o.getResultCode() == RESULT_OK) {
+                        // TODO: 로그인 성공 후 실행할 코드
+                    }
+                }
+            });
 
-        // 버튼 클릭 리스너 설정
-        binding.loginButton.setOnClickListener(v -> {
-            // 버튼 내려가는 애니메이션 로드 및 적용
-            Animation moveDownAnim = AnimationUtils.loadAnimation(this, R.anim.move_down_animation);
-            binding.loginField.startAnimation(moveDownAnim);
+        if (!isLoggedIn()) {
+            // 로그인 액티비티로 전환
+            loginLauncher.launch(new Intent(MainActivity.this, LoginActivity.class));
+        }
 
-            // 이미지가 보이도록 설정하고 페이드 인 애니메이션 적용
-            binding.textField.setVisibility(View.VISIBLE); // 이미지 보이게 설정
-            Animation fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.fade_in_animation);
-            binding.textField.startAnimation(fadeInAnim);
-        });
+        // 로그인이 완료되면 앱 실행 화면으로 전환
+        setContentView(R.layout.activity_main);
+    }
+
+    /**
+     * 앱을 실행했을 때 로그인한 상태인지 확인하는 메소드
+     *
+     * @return 로그인 여부
+     */
+    private boolean isLoggedIn() {
+        // TODO: 로그인 상태 확인 코드 구현
+
+        return false;
     }
 }
