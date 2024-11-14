@@ -6,27 +6,29 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.tourbuddy.app.databinding.LoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
     private LoginBinding binding;
+
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
     private int state;
 
     // 회원가입 액티비티를 실행하는 Launcher
@@ -68,29 +70,14 @@ public class LoginActivity extends AppCompatActivity {
                 state = 1;
             }
 
-            // 로그인 화면에서 클릭한 경우
+            // 로그인 화면에서 클릭한 경우 입력한 이메일과 비밀번호의 유효성 검정
             else if (state == 1) {
-                TextInputLayout emailField = binding.emailField;
-                TextInputLayout passwordField = binding.passwordField;
-
-                String email = Util.getTextFromTextInputLayout(emailField);
-                String password = Util.getTextFromTextInputLayout(passwordField);
-
-                if (email.isEmpty()) {
-                    emailField.setError("이메일 주소를 입력하세요.");
-                    return;
-                }
-
-                if (password.isEmpty()) {
-                    passwordField.setError("비밀번호를 입력하세요.");
-                    return;
-                }
+                this.validateAndLogin();
             }
-
         }
 
         /**
-         * 로그인 버튼을 눌렀을 때 요소들의 애니메이션을 실행하는 함수
+         * 로그인 버튼을 눌렀을 때 요소들의 애니메이션을 실행하는 메소드
          */
         private void animate() {
             LinearLayout buttonContainer = binding.buttonContainer;
@@ -113,12 +100,103 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         /**
+         * 로그인 버튼을 눌렀을 때 입력 필드의 값을 검증하고 login 메소드를 호출해 로그인을 시도하는 메소드
+         */
+        private void validateAndLogin() {
+            TextInputLayout emailField = binding.emailField;
+            TextInputLayout passwordField = binding.passwordField;
+
+            // 입력 필드에 띄운 오류 메시지 초기화
+            emailField.setError(null);
+            passwordField.setError(null);
+
+            String email = Util.getTextFromTextInputLayout(emailField);
+            String password = Util.getTextFromTextInputLayout(passwordField);
+
+            // 이메일 입력 필드가 비었을 경우 필드에 오류 메시지 출력
+            if (email.isEmpty()) {
+                emailField.setError("이메일 주소를 입력하세요.");
+                return;
+            }
+
+            // 비밀번호 입력 필드가 비었을 경우 필드에 오류 메시지 출력
+            if (password.isEmpty()) {
+                passwordField.setError("비밀번호를 입력하세요.");
+                return;
+            }
+
+            login(email, password);
+        }
+
+        /**
          * 입력받은 ID와 비밀번호로 서버에 로그인을 시도하는 메소드.
          * @param email 사용자가 입력한 이메일 주소
          * @param password 사용자가 입력한 비밀번호
          */
         private void login(String email, String password) {
-            // TODO: 서버와 통신해 로그인하는 코드
+            // 로그인 태스크와 결과에 따른 콜백 함수를 정의하고 태스크를 실행함
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    // 로그인에 성공했을 때 호출할 콜백 함수
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    // 로그인에 실패했을 때 호출할 콜백 함수
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // 인증 관련 에러인 경우
+                        if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                            handleInvalidCredentialsException(((FirebaseAuthInvalidCredentialsException) e).getErrorCode());
+                        }
+                        // 존재하지 않는 계정 에러인 경우
+                        else if (e instanceof FirebaseAuthInvalidUserException) {
+                            handleInvalidUserException();
+                        }
+                    }
+
+                    /**
+                     * FirebaseAuthInvalidCredentialsException 예외를 처리하는 메소드
+                     * @param errorCode 발생한 에러 코드
+                     */
+                    private void handleInvalidCredentialsException(String errorCode) {
+                        // 에러를 표시할 필드와 표시할 에러 메시지
+                        TextInputLayout errorTarget;
+                        String errorText;
+
+                        // 입력한 이메일의 형식이 올바르지 않을 경우
+                        switch (errorCode) {
+                            case "ERROR_INVALID_EMAIL":
+                                errorTarget = binding.emailField;
+                                errorText = "올바르지 않은 이메일 형식입니다.";
+                                break;
+                            // 비밀번호가 올바르지 않을 경우
+                            case "ERROR_WRONG_PASSWORD":
+                                errorTarget = binding.passwordField;
+                                errorText = "틀린 비밀번호입니다.";
+                                break;
+                            default:
+                                errorTarget = binding.emailField;
+                                errorText = "문제가 발생했습니다. 잠시 후 다시 시도하세요.";
+                                break;
+                        }
+
+                        errorTarget.setError(errorText);
+                    }
+
+                    /**
+                     * FirebaseAuthInvalidUserException 예외를 처리하는 메소드
+                     */
+                    private void handleInvalidUserException() {
+                        // 에러를 표시할 필드와 표시할 에러 메시지
+                        TextInputLayout errorTarget = binding.emailField;
+                        String errorText = "존재하지 않는 계정입니다.";
+
+                        errorTarget.setError(errorText);
+                    }
+                });
         }
     }
 
