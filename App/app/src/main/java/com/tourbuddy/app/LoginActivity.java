@@ -41,7 +41,11 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult o) {
-                    // TODO: 회원가입 성공 후 실행할 코드
+                    // 회원 가입 성공 시
+                    if (o.getResultCode() == RESULT_OK) {
+                        setResult(RESULT_OK);
+                        finish();
+                    }
                 }
             });
 

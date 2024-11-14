@@ -6,17 +6,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.tourbuddy.app.databinding.SiginupBinding;
 
 public class SignUpActivity extends AppCompatActivity {
     private SiginupBinding binding;
 
+    private FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
+
         binding = SiginupBinding.inflate(getLayoutInflater());
 
         Button signUpButton = binding.signUpButton;
@@ -26,19 +36,38 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
     }
 
-    private void signUp(String id, String password) {
-        // TODO: 서버와 통신해 회원가입하는 코드
+    /**
+     * 주어진 이메일 주소와 비밀번호로 계정을 생성함
+     * @param email 가입할 계정의 이메일 주소
+     * @param password 가입할 계정의 비밀번호
+     */
+    private void signUp(String email, String password) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    Toast resultToast = new Toast(SignUpActivity.this);
+
+                    if (task.isSuccessful()) {
+                        resultToast.setText("회원가입에 성공했습니다.");
+                        resultToast.show();
+
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                }
+            });
     }
 
     // 회원 가입 버튼에 등록할 OnClickListener
     class SignUpButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            TextInputLayout idField = binding.idField;
+            TextInputLayout emailField = binding.idField;
             TextInputLayout passwordField = binding.passwordField;
             TextInputLayout passwordTeField = binding.passwordTe;
 
-            String id = Util.getTextFromTextInputLayout(idField);
+            String email = Util.getTextFromTextInputLayout(emailField);
             String password = Util.getTextFromTextInputLayout(passwordField);
             String passwordTe = Util.getTextFromTextInputLayout(passwordTeField);
 
@@ -46,9 +75,9 @@ public class SignUpActivity extends AppCompatActivity {
             Toast warningToast = new Toast(SignUpActivity.this);
 
             // 아이디 또는 비밀번호를 입력하지 않았을 경우
-            if (id.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty()) {
                 // 토스트 메시지로 경고
-                String emptyFieldWarning = "아이디와 비밀번호를 모두 입력해주세요.";
+                String emptyFieldWarning = "이메일과 비밀번호를 모두 입력해주세요.";
 
                 warningToast.setText(emptyFieldWarning);
                 warningToast.show();
@@ -66,6 +95,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                 return;
             }
+
+            // 주어진 이메일과 비밀번호로 회원가입
+            signUp(email, password);
         }
     }
 }
