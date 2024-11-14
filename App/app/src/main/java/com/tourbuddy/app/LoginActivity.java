@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                     // 로그인에 실패했을 때 호출할 콜백 함수
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // 인증 관련 에러인 경우
+                        // 자격 증명 관련 에러인 경우
                         if (e instanceof FirebaseAuthInvalidCredentialsException) {
                             handleInvalidCredentialsException(((FirebaseAuthInvalidCredentialsException) e).getErrorCode());
                         }
