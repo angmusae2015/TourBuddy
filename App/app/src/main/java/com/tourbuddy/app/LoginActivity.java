@@ -2,23 +2,18 @@ package com.tourbuddy.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -40,16 +35,13 @@ public class LoginActivity extends AppCompatActivity {
         binding = LoginBinding.inflate(getLayoutInflater());
 
         signupLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult o) {
+                o -> {
                     // 회원 가입 성공 시
                     if (o.getResultCode() == RESULT_OK) {
                         setResult(RESULT_OK);
                         finish();
                     }
-                }
-            });
+                });
 
         Button loginButton = binding.loginButton;
         Button signInButton = binding.signUpButton;
@@ -135,14 +127,9 @@ public class LoginActivity extends AppCompatActivity {
          */
         private void login(String email, String password) {
             // 로그인 태스크와 결과에 따른 콜백 함수를 정의하고 태스크를 실행함
+            // 로그인에 성공했을 때 호출할 콜백 함수
             firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    // 로그인에 성공했을 때 호출할 콜백 함수
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        finish();
-                    }
-                })
+                .addOnSuccessListener(authResult -> finish())
                 .addOnFailureListener(new OnFailureListener() {
                     // 로그인에 실패했을 때 호출할 콜백 함수
                     @Override

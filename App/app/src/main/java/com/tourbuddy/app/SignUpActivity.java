@@ -1,32 +1,22 @@
 package com.tourbuddy.app;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.tourbuddy.app.databinding.SiginupBinding;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
     private SiginupBinding binding;
@@ -103,20 +93,17 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         /**
-         * 입력한 아이디가 존재하는 아이디인지 확인하고, 존재하지 않는 아이디일 경우 회원 가입을 시도하는 메소듣
+         * 입력한 아이디가 존재하는 아이디인지 확인하고, 존재하지 않는 아이디일 경우 회원 가입을 시도하는 메소드
          */
         private void validateId() {
             db.collection("users")
                 .whereEqualTo("id", id)
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (queryDocumentSnapshots.isEmpty()) {
-                            signUp();
-                        } else {
-                            binding.idField.setError("이미 사용 중인 아이디입니다.");
-                        }
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        signUp();
+                    } else {
+                        binding.idField.setError("이미 사용 중인 아이디입니다.");
                     }
                 });
         }
@@ -126,12 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
          */
         private void signUp() {
             firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        createUserDocument();
-                    }
-                })
+                .addOnSuccessListener(authResult -> createUserDocument())
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -201,12 +183,9 @@ public class SignUpActivity extends AppCompatActivity {
 
             db.collection("users")
                 .add(userData)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        setResult(RESULT_OK);
-                        finish();
-                    }
+                .addOnSuccessListener(documentReference -> {
+                    setResult(RESULT_OK);
+                    finish();
                 });
         }
     }
