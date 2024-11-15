@@ -20,9 +20,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.tourbuddy.app.databinding.SiginupBinding;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
     private SiginupBinding binding;
@@ -111,7 +115,7 @@ public class SignUpActivity extends AppCompatActivity {
                         if (queryDocumentSnapshots.isEmpty()) {
                             signUp();
                         } else {
-                            binding.emailField.setError("이미 사용 중인 아이디입니다.");
+                            binding.idField.setError("이미 사용 중인 아이디입니다.");
                         }
                     }
                 });
@@ -126,9 +130,6 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         createUserDocument();
-
-                        setResult(RESULT_OK);
-                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -194,7 +195,19 @@ public class SignUpActivity extends AppCompatActivity {
          * Firestore DB의 users Collection에 가입하는 유저에 대한 Document를 생성함
          */
         private void createUserDocument() {
+            HashMap<String, Object> userData = new HashMap<>();
+            userData.put("email", email);
+            userData.put("id", id);
 
+            db.collection("users")
+                .add(userData)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
         }
     }
 }
