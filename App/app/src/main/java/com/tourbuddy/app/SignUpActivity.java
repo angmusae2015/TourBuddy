@@ -20,17 +20,21 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.tourbuddy.app.databinding.SiginupBinding;
 
 public class SignUpActivity extends AppCompatActivity {
     private SiginupBinding binding;
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         binding = SiginupBinding.inflate(getLayoutInflater());
 
@@ -43,6 +47,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     // 회원 가입 버튼에 등록할 OnClickListener
     class SignUpButtonClickListener implements View.OnClickListener {
+        private String email;
+        private String id;
+        private String password;
+
         @Override
         public void onClick(View view) {
             validateAndSignUp();
@@ -53,19 +61,27 @@ public class SignUpActivity extends AppCompatActivity {
          */
         private void validateAndSignUp() {
             TextInputLayout emailField = binding.emailField;
+            TextInputLayout idField = binding.idField;
             TextInputLayout passwordField = binding.passwordField;
             TextInputLayout passwordTeField = binding.passwordTe;
 
-            String email = Util.getTextFromTextInputLayout(emailField);
-            String password = Util.getTextFromTextInputLayout(passwordField);
+            email = Util.getTextFromTextInputLayout(emailField);
+            id = Util.getTextFromTextInputLayout(idField);
+            password = Util.getTextFromTextInputLayout(passwordField);
             String passwordTe = Util.getTextFromTextInputLayout(passwordTeField);
 
             emailField.setError(null);
+            idField.setError(null);
             passwordField.setError(null);
             passwordTeField.setError(null);
 
             if (email.isEmpty()) {
                 emailField.setError("이메일 주소를 입력하세요.");
+                return;
+            }
+
+            if (id.isEmpty()) {
+                idField.setError("아이디를 입력하세요.");
                 return;
             }
 
@@ -79,19 +95,38 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
-            signUp(email, password);
+            validateId();
         }
 
         /**
-         * 주어진 이메일 주소와 비밀번호로 계정을 생성함
-         * @param email 가입할 계정의 이메일 주소
-         * @param password 가입할 계정의 비밀번호
+         * 입력한 아이디가 존재하는 아이디인지 확인하고, 존재하지 않는 아이디일 경우 회원 가입을 시도하는 메소듣
          */
-        private void signUp(String email, String password) {
+        private void validateId() {
+            db.collection("users")
+                .whereEqualTo("id", id)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots.isEmpty()) {
+                            signUp();
+                        } else {
+                            binding.emailField.setError("이미 사용 중인 아이디입니다.");
+                        }
+                    }
+                });
+        }
+
+        /**
+         * 입력한 이메일 주소와 비밀번호로 계정을 생성함
+         */
+        private void signUp() {
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+                        createUserDocument();
+
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -153,6 +188,13 @@ public class SignUpActivity extends AppCompatActivity {
                         errorTarget.setError(errorText);
                     }
                 });
+        }
+
+        /**
+         * Firestore DB의 users Collection에 가입하는 유저에 대한 Document를 생성함
+         */
+        private void createUserDocument() {
+
         }
     }
 }
