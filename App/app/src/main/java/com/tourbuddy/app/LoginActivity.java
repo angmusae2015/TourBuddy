@@ -54,8 +54,26 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
     }
 
-    // 로그인 버튼에 등록할 OnClickListener
+    /*
+     * 로그인 버튼에 등록할 OnClickListener
+     *
+     * 처음에는 로그인 버튼과 회원 가입 버튼만 노출되며(초기 화면, state = 0), 로그인 버튼을 누르면 두 버튼이 아래로 내려가며
+     * 이메일과 비밀번호를 입력하는 TextInput이 등장함(로그인 화면, state = 1).
+     *
+     * 초기 화면에서 로그인 버튼을 눌렀을 때 나타나는 화면 전환은 animate() 메소드에 정의되어 있음.
+     *
+     * 로그인 화면에서 로그인 버튼을 누르면 아래 메소드들이 자신의 다음 메소드를 순차적으로 호출하며 로그인을 실행함.
+     * 1. validateAndLogin(): 사용자가 TextInput에 입력한 값이 유효한지 검사하고, 유효하다면 login() 메소드를 호출함.
+     * 2. login(): 사용자가 입력한 이메일 주소와 비밀번호로 Firebase에 로그인을 시도함. 성공할 경우 액티비티를 종료하며,
+     *      실패할 경우 각 에러 코드에 대응하여 사용자에게 오류 메시지를 표출함.
+     *
+     * 참고: 회원 가입 화면 액티비티인 SignUpActivity와 패턴을 통일하기 위해 입력받은 이메일 주소/비밀번호를
+     *      login 메소드에 매개변수로 바로 전달하지 않고 email/password 필드에 저장해 사용함.
+     */
     class LoginButtonClickListener implements View.OnClickListener {
+        private String email;
+        private String password;
+
         @Override
         public void onClick(View view) {
             // 초기 화면에서 클릭한 경우
@@ -104,8 +122,8 @@ public class LoginActivity extends AppCompatActivity {
             emailField.setError(null);
             passwordField.setError(null);
 
-            String email = Util.getTextFromTextInputLayout(emailField);
-            String password = Util.getTextFromTextInputLayout(passwordField);
+            email = Util.getTextFromTextInputLayout(emailField);
+            password = Util.getTextFromTextInputLayout(passwordField);
 
             // 이메일 입력 필드가 비었을 경우 필드에 오류 메시지 출력
             if (email.isEmpty()) {
@@ -119,15 +137,13 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            login(email, password);
+            login();
         }
 
         /**
          * 입력받은 ID와 비밀번호로 서버에 로그인을 시도하는 메소드.
-         * @param email 사용자가 입력한 이메일 주소
-         * @param password 사용자가 입력한 비밀번호
          */
-        private void login(String email, String password) {
+        private void login() {
             // 로그인 태스크와 결과에 따른 콜백 함수를 정의하고 태스크를 실행함
             // 로그인에 성공했을 때 호출할 콜백 함수
             firebaseAuth.signInWithEmailAndPassword(email, password)
