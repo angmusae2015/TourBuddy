@@ -22,7 +22,7 @@ import com.tourbuddy.app.databinding.LoginBinding;
 public class LoginActivity extends AppCompatActivity {
     private LoginBinding binding;
 
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth firebaseAuth;
 
     private int state;
 
@@ -32,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
+
         binding = LoginBinding.inflate(getLayoutInflater());
 
         signupLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),

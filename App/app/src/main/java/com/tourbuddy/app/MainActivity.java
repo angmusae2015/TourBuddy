@@ -14,40 +14,34 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult o) {
-                    if (o.getResultCode() == RESULT_OK) {
-                        // TODO: 로그인 성공 후 실행할 코드
-                    }
-                }
-            });
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
 
-        if (!isLoggedIn()) {
+        ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                o -> {
+                    if (o.getResultCode() == RESULT_OK) {
+                        setContentView(R.layout.main);
+                    }
+                });
+
+        // 현재 로그인한 유저가 없을 경우
+        if (user == null) {
             // 로그인 액티비티로 전환
             loginLauncher.launch(new Intent(MainActivity.this, LoginActivity.class));
         }
 
-        // 로그인이 완료되면 앱 실행 화면으로 전환
-        setContentView(R.layout.activity_main);
-    }
-
-    /**
-     * 앱을 실행했을 때 로그인한 상태인지 확인하는 메소드
-     *
-     * @return 로그인 여부
-     */
-    private boolean isLoggedIn() {
-        // TODO: 로그인 상태 확인 코드 구현
-
-        return false;
+        setContentView(R.layout.main);
     }
 }
