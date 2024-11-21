@@ -1,37 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/homeTabFragmentLayout"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/userTravelDashboard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/dashboardBackground"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:src="@drawable/test"
-            android:layout_alignParentTop="true" />
-
+        android:layout_height="wrap_content"
+        android:background="#1DE9B6"
+        >
 
         <TextView
             android:id="@+id/dashboardText"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="2dp"
-            android:gravity="center"
-            android:text=""
-            android:textColor="#000"
-            android:textSize="20sp" />
+            android:layout_height="150sp"
+            android:gravity="center_vertical"
+            android:paddingStart="20sp"
+            android:paddingEnd="15sp"
+            tools:text="다음 오키나와 여행까지\nD-14"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/contentsFeed"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
