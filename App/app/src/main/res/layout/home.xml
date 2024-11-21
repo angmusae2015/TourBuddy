@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:src="@drawable/test"
-            android:layout_alignParentTop="true" />
-
+        android:layout_height="wrap_content"
+        android:background="#1DE9B6"
+        >
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/dashboardText"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:text="이미지 위의 텍스트"
-            android:textColor="#000"
-            android:textSize="20sp"
-            android:layout_alignParentTop="true"
-            android:gravity="center" />
+            android:layout_height="150sp"
+            android:gravity="center_vertical"
+            android:paddingStart="20sp"
+            android:paddingEnd="15sp"
+            tools:text="다음 오키나와 여행까지\nD-14"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
