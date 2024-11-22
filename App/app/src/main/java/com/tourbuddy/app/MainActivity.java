@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.tourbuddy.app.databinding.MainBinding;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth auth;
     private FirebaseUser user;
 
     private MainBinding binding;
@@ -23,21 +23,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
 
+        // 로그인 화면 액티비티로 전환하는 launcher
         ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 o -> {
                     if (o.getResultCode() == RESULT_OK)
                         setHome();
                 });
 
-        // 현재 로그인한 유저가 없을 경우
+        // 현재 로그인한 인증 정보가 캐시에 없을 경우
         if (user == null) {
             // 로그인 액티비티로 전환
             loginLauncher.launch(new Intent(MainActivity.this, LoginActivity.class));
-        } else
-            setHome();
+        }
+        // 현재 로그인한 인증 정보가 캐시에 있을 경우
+        else {
+            // 인증 정보를 갱신해 유효한지 확인
+            user.reload().addOnSuccessListener(reloadResult -> {
+                // 인증 정보가 유효하지 않을 경우
+                if (auth.getCurrentUser() == null) {
+                    // 로그아웃 후 로그인 액티비티로 전환
+                    auth.signOut();
+                    loginLauncher.launch(new Intent(MainActivity.this, LoginActivity.class));
+                }
+                // 인증 정보가 유효할 경우
+                else {
+                    // 홈 화면으로 전환
+                    setHome();
+                }
+            });
+        }
     }
 
     /**
