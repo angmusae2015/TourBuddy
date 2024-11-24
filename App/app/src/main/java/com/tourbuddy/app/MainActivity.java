@@ -2,6 +2,7 @@ package com.tourbuddy.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -29,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
         // 로그인 화면 액티비티로 전환하는 launcher
         ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 o -> {
-                    if (o.getResultCode() == RESULT_OK)
-                        setHome();
+                    // 로그인 액티비티가 종료되면 홈 화면으로 전환하고 user 필드를 갱신함
+                    setHome();
+                    user = auth.getCurrentUser();
                 });
 
         // 현재 로그인한 인증 정보가 캐시에 없을 경우
@@ -41,19 +43,15 @@ public class MainActivity extends AppCompatActivity {
         // 현재 로그인한 인증 정보가 캐시에 있을 경우
         else {
             // 인증 정보를 갱신해 유효한지 확인
-            user.reload().addOnSuccessListener(reloadResult -> {
-                // 인증 정보가 유효하지 않을 경우
-                if (auth.getCurrentUser() == null) {
-                    // 로그아웃 후 로그인 액티비티로 전환
-                    auth.signOut();
-                    loginLauncher.launch(new Intent(MainActivity.this, LoginActivity.class));
-                }
-                // 인증 정보가 유효할 경우
-                else {
-                    // 홈 화면으로 전환
-                    setHome();
-                }
-            });
+            user.reload()
+                    // 캐시된 인증 정보가 유효할 경우
+                    .addOnSuccessListener(reloadResult -> setHome())    // 홈 화면으로 전환
+                    // 캐시된 인증 정보가 유효하지 않을 경우
+                    .addOnFailureListener(exception -> {
+                        // 로그아웃 후 로그인 액티비티로 전환
+                        auth.signOut();
+                        loginLauncher.launch(new Intent(MainActivity.this, LoginActivity.class));
+                    });
         }
     }
 
