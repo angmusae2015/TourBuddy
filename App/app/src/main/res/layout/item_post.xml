@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/postsItem"
+        android:layout_width="360dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_posts_background"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:background="@drawable/ic_posts_background"
+            android:id="@+id/postsIcon"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:clipToOutline="true"
+            android:src="@drawable/test"
+            android:scaleType="center"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="18sp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/postsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="후기 글 제목"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/postsAuthorId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아이디"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/postsTimeline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2024년 8월 21일 부터\n2024년 8월 23일 까지"
+                android:textSize="14sp"/>
+
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="20sp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20sp"
+                    android:src="@drawable/ic_location"/>
+
+                <TextView
+                    android:id="@+id/postsLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:text="부산"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
