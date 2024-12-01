@@ -1,8 +1,9 @@
 package com.tourbuddy.app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -13,13 +14,19 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.tourbuddy.app.databinding.MainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private FirebaseFirestore db;
 
     private MainBinding binding;
+
+    private ActivityResultLauncher<Intent> loginLauncher;
+
+    private SharedPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +35,28 @@ public class MainActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
 
         // 로그인 화면 액티비티로 전환하는 launcher
-        ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+        loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 o -> {
                     // 로그인 액티비티가 종료되면 홈 화면으로 전환하고 user 필드를 갱신함
-                    setHome();
                     user = auth.getCurrentUser();
+                    Util.fetchUserId(db, user, id -> userPreferences.edit()
+                            .putString("id", id)
+                            .apply());
+                    setHome();
                 });
 
+        userPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+
+        checkCredential();
+    }
+
+    /**
+     * 현재 캐시된 인증 정보가 유효한지 확인하고 유효하지 않을 경우 로그아웃 후 로그인 액티비티로 전환하는 메소드
+     */
+    private void checkCredential() {
         // 현재 로그인한 인증 정보가 캐시에 없을 경우
         if (user == null) {
             // 로그인 액티비티로 전환
@@ -47,11 +67,17 @@ public class MainActivity extends AppCompatActivity {
             // 인증 정보를 갱신해 유효한지 확인
             user.reload()
                     // 캐시된 인증 정보가 유효할 경우
-                    .addOnSuccessListener(reloadResult -> setHome())    // 홈 화면으로 전환
+                    .addOnSuccessListener(reloadResult -> {
+                        // user SharedPreferences에 로그인한 아이디 저장
+                        Util.fetchUserId(db, user, this::setIdInPreferences);
+                        // 홈 화면으로 전환
+                        setHome();
+                    })
                     // 캐시된 인증 정보가 유효하지 않을 경우
                     .addOnFailureListener(exception -> {
                         // 로그아웃 후 로그인 액티비티로 전환
                         auth.signOut();
+                        setIdInPreferences(null);
                         loginLauncher.launch(new Intent(MainActivity.this, LoginActivity.class));
                     });
         }
@@ -66,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         attachListenerToBottomNavigation();
 
-        trasferTo(HomeTabFragment.newInstance());
+        trasferTo(HomeTabFragment.newInstance(userPreferences));
     }
 
     /**
@@ -79,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnItemSelectedListener(item -> {
             // TODO: 탭 간 전환에서 fragment를 새 인스턴스로 만들지 않고 이전 상황을 다시 불러올 수 있도록 재구현할 것
             if (item.getItemId() == R.id.homeTab) {
-                trasferTo(HomeTabFragment.newInstance());
+                trasferTo(HomeTabFragment.newInstance(userPreferences));
             }
             else if (item.getItemId() == R.id.searchTab) {
                 // transferTo(SearchTabFragment.newInstance());
@@ -111,5 +137,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
+    }
+
+    private void setIdInPreferences(String id) {
+        userPreferences.edit()
+                .putString("id", id)
+                .apply();
     }
 }
