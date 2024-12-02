@@ -1,9 +1,13 @@
 package com.tourbuddy.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,16 +28,23 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
 
+    private ActivityResultLauncher<Intent> askNameLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        askNameLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), o -> {
+            setResult(RESULT_OK);
+            finish();
+        });
 
         binding = SiginupBinding.inflate(getLayoutInflater());
 
         Button signUpButton = binding.signUpButton;
-
         signUpButton.setOnClickListener(new SignUpButtonClickListener());
 
         setContentView(binding.getRoot());
@@ -184,8 +195,7 @@ public class SignUpActivity extends AppCompatActivity {
             db.collection("users")
                 .add(userData)
                 .addOnSuccessListener(documentReference -> {
-                    setResult(RESULT_OK);
-                    finish();
+                    askNameLauncher.launch(new Intent(SignUpActivity.this, SignUpAskNameActivity.class));
                 });
         }
     }

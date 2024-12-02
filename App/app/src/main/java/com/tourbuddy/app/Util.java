@@ -4,11 +4,16 @@ import android.util.Log;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
 public class Util {
+    public interface OnUserDocumentFetchListener {
+        void onUserDocumentFetch(DocumentSnapshot userDocument);
+    }
+
     public interface OnUserIdFetchListener {
         void onUserIdFetch(String id);
     }
@@ -37,6 +42,24 @@ public class Util {
                                 .getString("id");
 
                         listener.onUserIdFetch(id);
+                    }
+                });
+    }
+
+    public static void fetchUserDocument(FirebaseFirestore db, FirebaseUser user, OnUserDocumentFetchListener listener) {
+        String email = user.getEmail();
+
+        db.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        listener.onUserDocumentFetch(null);
+                    } else {
+                        listener.onUserDocumentFetch(queryDocumentSnapshots
+                                .getDocuments()
+                                .get(0)
+                        );
                     }
                 });
     }
