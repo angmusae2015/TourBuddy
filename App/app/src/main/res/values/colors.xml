@@ -5,8 +5,5 @@
 
     <color name="colorPrimary">#1DE9B6</color>
     <color name="colorPrimaryDark">#14C89B</color>
-    <color name="colorAccent">#E0E0E0</color>
-    <color name="toolbarIconColor">#FFFFFF</color>
-    <color name="loginPageBackgroundColor">#FFFFFF</color>
-    <color name="productGridBackgroundColor">#FFFFFF</color>
+    <color name="colorItemBackground">#F2F2F2</color>
 </resources>
