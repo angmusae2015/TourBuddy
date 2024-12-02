@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private MainBinding binding;
 
     private ActivityResultLauncher<Intent> loginLauncher;
+    private Intent loginIntent;
 
     private SharedPreferences userPreferences;
 
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
                             .apply());
                     setHome();
                 });
+        loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 
         userPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
 
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         // 현재 로그인한 인증 정보가 캐시에 없을 경우
         if (user == null) {
             // 로그인 액티비티로 전환
-            loginLauncher.launch(new Intent(MainActivity.this, LoginActivity.class));
+            loginLauncher.launch(loginIntent);
         }
         // 현재 로그인한 인증 정보가 캐시에 있을 경우
         else {
@@ -143,5 +146,12 @@ public class MainActivity extends AppCompatActivity {
         userPreferences.edit()
                 .putString("id", id)
                 .apply();
+    }
+
+    public void onLogout() {
+        auth.signOut();
+        user = null;
+        setIdInPreferences(null);
+        loginLauncher.launch(loginIntent);
     }
 }
