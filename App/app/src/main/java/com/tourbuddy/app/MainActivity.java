@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         attachListenerToBottomNavigation();
 
-        trasferTo(HomeTabFragment.newInstance(userPreferences));
+        transferTo(HomeTabFragment.newInstance(userPreferences));
     }
 
     /**
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnItemSelectedListener(item -> {
             // TODO: 탭 간 전환에서 fragment를 새 인스턴스로 만들지 않고 이전 상황을 다시 불러올 수 있도록 재구현할 것
             if (item.getItemId() == R.id.homeTab) {
-                trasferTo(HomeTabFragment.newInstance(userPreferences));
+                transferTo(HomeTabFragment.newInstance(userPreferences));
             }
             else if (item.getItemId() == R.id.searchTab) {
                 // transferTo(SearchTabFragment.newInstance());
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 // transferTo(newPostTabFragment.newInstance());
             }
             else if (item.getItemId() == R.id.myPlanTab) {
-                // transferTo(myPlanTabFragment.newInstance());
+//                 transferTo(MyPlanTabFragment.newInstance(userPreferences));
             }
             else if (item.getItemId() == R.id.profileTab) {
                 // transferTo(profileTabFragment.newInstance());
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
      * 매개변수로 주어진 fragment 인스턴스로 홈 Main 액티비티의 fragmentContainer를 교체함
      * @param fragment 교체할 fragment 인스턴스
      */
-    private void trasferTo(Fragment fragment) {
+    private void transferTo(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
