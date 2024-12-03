@@ -10,6 +10,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 public class Util {
+    public static final String DEBUG_TAG = "AppDebug";
+
     public interface OnUserDocumentFetchListener {
         void onUserDocumentFetch(DocumentSnapshot userDocument);
     }
