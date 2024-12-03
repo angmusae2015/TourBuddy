@@ -39,6 +39,8 @@ android {
 dependencies {
     // Firebase BoM 불러오기
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
 
     implementation(libs.appcompat)
     implementation(libs.material)
