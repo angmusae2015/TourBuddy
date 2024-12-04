@@ -7,6 +7,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -17,10 +18,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.tourbuddy.app.databinding.LoginBinding;
+import com.tourbuddy.app.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
-    private LoginBinding binding;
+    private ActivityLoginBinding binding;
 
     private FirebaseAuth firebaseAuth;
 
@@ -32,9 +33,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        binding = LoginBinding.inflate(getLayoutInflater());
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
 
         signupLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 o -> {

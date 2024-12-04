@@ -1,5 +1,6 @@
 package com.tourbuddy.app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,8 +9,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.tourbuddy.app.databinding.HomeTabFragmentBinding;
+import com.tourbuddy.app.databinding.FragmentHomeTabBinding;
 
 /**
  * 홈 화면의 홈 탭의 컨텐츠를 표시하는 Fragment.
@@ -21,21 +24,55 @@ import com.tourbuddy.app.databinding.HomeTabFragmentBinding;
  *
  */
 public class HomeTabFragment extends Fragment {
-    private HomeTabFragmentBinding binding;
+    private FragmentHomeTabBinding binding;
+
+    private SharedPreferences userPreferences;
+
+    private TextView dashboardText;
 
     /**
      * Fragment를 생성하는 Factory 메소드
      * @return HomeTabFragment의 새 인스턴스
      */
-    public static HomeTabFragment newInstance() {
+    public static HomeTabFragment newInstance(SharedPreferences userPreferences) {
         HomeTabFragment fragment = new HomeTabFragment();
+        fragment.userPreferences = userPreferences;
+
         return fragment;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = HomeTabFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentHomeTabBinding.inflate(inflater, container, false);
+
+        // 테스트 용 코드 시작
+        dashboardText = binding.dashboardText;
+        Button logoutButton = binding.logoutButton;
+
+        userPreferences.registerOnSharedPreferenceChangeListener((pref, key) -> {
+            if (key.equals("id")) {
+                updateDashboard();
+            }
+        });
+
+        logoutButton.setOnClickListener(v -> {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(HomeTabFragment.this)
+                    .commit();
+            mainActivity.onLogout();
+        });
+
+        updateDashboard();
+        // 테스트 용 코드 끝
+
         return binding.getRoot();
+    }
+
+    private void updateDashboard() {
+        String id = userPreferences.getString("id", null);
+        dashboardText.setText(String.format("로그인: %s", id));
     }
 }
