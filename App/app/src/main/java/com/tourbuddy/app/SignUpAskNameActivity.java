@@ -6,17 +6,14 @@ import android.widget.EditText;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.tourbuddy.app.databinding.SignupAskNameBinding;
+import com.tourbuddy.app.databinding.ActivitySignupAskNameBinding;
 
 public class SignUpAskNameActivity extends AppCompatActivity {
-    private SignupAskNameBinding binding;
+    private ActivitySignupAskNameBinding binding;
 
     private FirebaseFirestore db;
     private FirebaseUser user;
@@ -28,7 +25,7 @@ public class SignUpAskNameActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        binding = SignupAskNameBinding.inflate(getLayoutInflater());
+        binding = ActivitySignupAskNameBinding.inflate(getLayoutInflater());
 
         binding.nextButton.setOnClickListener(v -> {
             EditText nameEditText = binding.nameEditText;

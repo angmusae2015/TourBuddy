@@ -18,12 +18,12 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.tourbuddy.app.databinding.SiginupBinding;
+import com.tourbuddy.app.databinding.ActivitySiginupBinding;
 
 import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
-    private SiginupBinding binding;
+    private ActivitySiginupBinding binding;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
@@ -42,7 +42,7 @@ public class SignUpActivity extends AppCompatActivity {
             finish();
         });
 
-        binding = SiginupBinding.inflate(getLayoutInflater());
+        binding = ActivitySiginupBinding.inflate(getLayoutInflater());
 
         Button signUpButton = binding.signUpButton;
         signUpButton.setOnClickListener(new SignUpButtonClickListener());

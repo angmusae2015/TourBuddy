@@ -16,14 +16,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.tourbuddy.app.databinding.MainBinding;
+import com.tourbuddy.app.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseFirestore db;
 
-    private MainBinding binding;
+    private ActivityMainBinding binding;
 
     private ActivityResultLauncher<Intent> loginLauncher;
     private Intent loginIntent;
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
      * 로그인이 완료되면 홈 화면으로 전환하고 fragmentContainer에 홈 탭의 fragment를 채우는 메소드
      */
     private void setHome() {
-        binding = MainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         attachListenerToBottomNavigation();
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 transferTo(HomeTabFragment.newInstance(userPreferences));
             }
             else if (item.getItemId() == R.id.searchTab) {
-                // transferTo(SearchTabFragment.newInstance());
+                 transferTo(SearchTabFragment.newInstance());
             }
             else if (item.getItemId() == R.id.newPostTab) {
                 // transferTo(newPostTabFragment.newInstance());

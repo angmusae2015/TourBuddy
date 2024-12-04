@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.tourbuddy.app.databinding.HomeTabFragmentBinding;
+import com.tourbuddy.app.databinding.FragmentHomeTabBinding;
 
 /**
  * 홈 화면의 홈 탭의 컨텐츠를 표시하는 Fragment.
@@ -24,7 +24,7 @@ import com.tourbuddy.app.databinding.HomeTabFragmentBinding;
  *
  */
 public class HomeTabFragment extends Fragment {
-    private HomeTabFragmentBinding binding;
+    private FragmentHomeTabBinding binding;
 
     private SharedPreferences userPreferences;
 
@@ -44,7 +44,7 @@ public class HomeTabFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = HomeTabFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentHomeTabBinding.inflate(inflater, container, false);
 
         // 테스트 용 코드 시작
         dashboardText = binding.dashboardText;
