@@ -90,7 +90,7 @@
             android:textStyle="bold"/>
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/changeProfileImageButton"
             android:layout_width="175dp"
             android:layout_height="50dp"
@@ -105,7 +105,7 @@
             android:textSize="19sp"
             android:textStyle="bold"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/editMyPosts"
             android:layout_width="175dp"
             android:layout_height="50dp"
