@@ -191,6 +191,9 @@ public class SignUpActivity extends AppCompatActivity {
             HashMap<String, Object> userData = new HashMap<>();
             userData.put("email", email);
             userData.put("id", id);
+            userData.put("name", "");
+            userData.put("follower", 0);
+            userData.put("following", 0);
 
             db.collection("users")
                 .add(userData)
