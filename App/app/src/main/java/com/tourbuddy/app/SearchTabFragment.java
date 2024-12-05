@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.tourbuddy.app.databinding.FragmentSearchResultEmptyBinding;
 import com.tourbuddy.app.databinding.FragmentSearchTabBinding;
 
 public class SearchTabFragment extends Fragment {
@@ -28,12 +29,9 @@ public class SearchTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSearchTabBinding.inflate(inflater, container, false);
 
-        searchResultEmptyFragment = SearchResultEmptyFragment.newInstance();
-
-        FragmentManager fragmentManager = getChildFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.getId(), searchResultEmptyFragment)
-                .commit();
+        FragmentSearchResultEmptyBinding.inflate(
+                inflater, binding.resultContainer, true
+        );
 
         return binding.getRoot();
     }
