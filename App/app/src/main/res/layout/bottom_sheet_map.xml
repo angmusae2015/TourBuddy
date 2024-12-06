@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="200dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/darker_gray" />
+
+    <!-- 간단 설명 입력 (Collapsed 상태) -->
+    <EditText
+        android:id="@+id/edit_simple_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="장소에 대해 설명해주세요"
+        android:minHeight="100dp"
+        android:gravity="top"
+        android:padding="8dp"/>
+
+    <!-- 상세 설명 영역 (Expanded 상태) -->
+    <LinearLayout
+        android:id="@+id/detail_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/edit_detail_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="상세 설명을 입력하세요"
+            android:minHeight="150dp"
+            android:gravity="top"
+            android:padding="8dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add_photos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="사진 추가"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_photos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+</LinearLayout>
