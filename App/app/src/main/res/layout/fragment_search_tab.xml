@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -11,13 +11,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
+        <com.google.android.material.search.SearchBar
+            android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/shape_item"/>
+            android:hint="@string/searchbar_hint" />
     </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/searchbar_hint"
+        app:layout_anchor="@id/searchBar" >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/seachSuggestion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"/>
+    </com.google.android.material.search.SearchView>
 
     <HorizontalScrollView
         android:id="@+id/filterChipContainer"
@@ -39,4 +51,4 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBar" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
