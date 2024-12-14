@@ -90,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
      * 로그인이 완료되면 홈 화면으로 전환하고 fragmentContainer에 홈 탭의 fragment를 채우는 메소드
      */
     private void setHome() {
+        // DB에서 도시 목록을 불러옴
+        Util.fetchCityDocument(db);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
