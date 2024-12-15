@@ -1,19 +1,20 @@
 package com.tourbuddy.app;
 
-import android.util.Log;
-
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Util {
+    private static List<DocumentSnapshot> fetchedCityList = new ArrayList<>();
+
     public static final String DEBUG_TAG = "AppDebug";
 
-    public interface OnUserDocumentFetchListener {
-        void onUserDocumentFetch(DocumentSnapshot userDocument);
+    public interface OnDocumentFetchListener {
+        void onDocumentFetch(DocumentSnapshot userDocument);
     }
 
     public interface OnUserIdFetchListener {
@@ -48,7 +49,7 @@ public class Util {
                 });
     }
 
-    public static void fetchUserDocument(FirebaseFirestore db, FirebaseUser user, OnUserDocumentFetchListener listener) {
+    public static void fetchUserDocument(FirebaseFirestore db, FirebaseUser user, OnDocumentFetchListener listener) {
         String email = user.getEmail();
 
         db.collection("users")
@@ -56,13 +57,33 @@ public class Util {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.isEmpty()) {
-                        listener.onUserDocumentFetch(null);
+                        listener.onDocumentFetch(null);
                     } else {
-                        listener.onUserDocumentFetch(queryDocumentSnapshots
+                        listener.onDocumentFetch(queryDocumentSnapshots
                                 .getDocuments()
                                 .get(0)
                         );
                     }
                 });
+    }
+
+    public static void fetchCityDocument(FirebaseFirestore db) {
+        db.collection("domestic")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Util.fetchedCityList.addAll(queryDocumentSnapshots.getDocuments());
+                });
+    }
+
+    public static ArrayList<DocumentSnapshot> searchCity(String query) {
+        ArrayList<DocumentSnapshot> resultCityList = new ArrayList<>();
+
+        for (DocumentSnapshot cityDoc : fetchedCityList) {
+            if (cityDoc.getString("name").startsWith(query)) {
+                resultCityList.add(cityDoc);
+            }
+        }
+
+        return resultCityList;
     }
 }

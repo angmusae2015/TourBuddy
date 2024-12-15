@@ -1,21 +1,109 @@
 package com.tourbuddy.app;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.tourbuddy.app.databinding.FragmentSearchResultEmptyBinding;
 import com.tourbuddy.app.databinding.FragmentSearchTabBinding;
+import com.tourbuddy.app.databinding.ItemSearchSuggestionCityBinding;
+
+import java.util.ArrayList;
 
 public class SearchTabFragment extends Fragment {
     private FragmentSearchTabBinding binding;
 
     private SearchResultEmptyFragment searchResultEmptyFragment;
+
+    private class CitySuggestionViewHolder extends RecyclerView.ViewHolder {
+        private ItemSearchSuggestionCityBinding itemBinding;
+
+        public CitySuggestionViewHolder(ItemSearchSuggestionCityBinding itemBinding) {
+            super(itemBinding.getRoot());
+            this.itemBinding = itemBinding;
+        }
+    }
+
+    private class CitySuggetstionAdapter extends RecyclerView.Adapter<CitySuggestionViewHolder> {
+        ArrayList<DocumentSnapshot> cityList = new ArrayList<>();
+
+        int selectedPosition = -1;
+
+        CitySuggestionViewHolder selectedViewHolder;
+
+        @NonNull
+        @Override
+        public CitySuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ItemSearchSuggestionCityBinding itemBinding = ItemSearchSuggestionCityBinding.inflate(
+                    LayoutInflater.from(parent.getContext()),
+                    parent,
+                    false
+            );
+
+            return new CitySuggestionViewHolder(itemBinding);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull CitySuggestionViewHolder holder, int position) {
+            DocumentSnapshot cityDocument = cityList.get(position);
+
+            holder.itemBinding.itemTitle.setText(cityDocument.getString("name"));
+            if (cityDocument.getBoolean("isDomestic"))
+                holder.itemBinding.itemTag.setText("국내 여행지");
+            else holder.itemBinding.itemTag.setText("해외 여행지");
+
+            holder.itemBinding.itemInfoContainer.setOnClickListener(v -> {
+                if (selectedPosition == position) return;
+
+                if (selectedViewHolder != null)
+                    selectedViewHolder.itemBinding.buttonContainer.setVisibility(View.GONE);
+                holder.itemBinding.buttonContainer.setVisibility(View.VISIBLE);
+
+                selectedPosition = holder.getAdapterPosition();
+                selectedViewHolder = holder;
+            });
+
+            holder.itemBinding.leftButton.setOnClickListener(v -> {
+//                Chip chip = new Chip(getContext());
+//                chip.setText("New");
+//                chip.setChipIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_location));
+//                chip.setChipIconSize(48f);
+//                chip.setChipStrokeWidth(1f);
+
+//                binding.searchBar.addView(chip);
+                binding.searchView.hide();
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return cityList.size();
+        }
+
+        public void setCityList(ArrayList<DocumentSnapshot> cityList) {
+            this.cityList = cityList;
+
+            selectedPosition = -1;
+            selectedViewHolder = null;
+
+            notifyDataSetChanged();
+        }
+    }
 
     public static SearchTabFragment newInstance() {
         SearchTabFragment fragment = new SearchTabFragment();
@@ -28,12 +116,31 @@ public class SearchTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSearchTabBinding.inflate(inflater, container, false);
 
-        searchResultEmptyFragment = SearchResultEmptyFragment.newInstance();
+        FragmentSearchResultEmptyBinding emptyResultBinding = FragmentSearchResultEmptyBinding.inflate(
+                inflater, binding.resultContainer, true
+        );
 
-        FragmentManager fragmentManager = getChildFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.getId(), searchResultEmptyFragment)
-                .commit();
+        CitySuggetstionAdapter citySuggetstionAdapter = new CitySuggetstionAdapter();
+        binding.seachSuggestion.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.seachSuggestion.setAdapter(citySuggetstionAdapter);
+
+        binding.searchView.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                ArrayList<DocumentSnapshot> result = Util.searchCity(editable.toString());
+                citySuggetstionAdapter.setCityList(result);
+            }
+        });
 
         return binding.getRoot();
     }
