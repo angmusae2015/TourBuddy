@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.tourbuddy.app.databinding.FragmentSearchResultEmptyBinding;
@@ -40,6 +42,10 @@ public class SearchTabFragment extends Fragment {
     private class CitySuggetstionAdapter extends RecyclerView.Adapter<CitySuggestionViewHolder> {
         ArrayList<DocumentSnapshot> cityList = new ArrayList<>();
 
+        int selectedPosition = -1;
+
+        CitySuggestionViewHolder selectedViewHolder;
+
         @NonNull
         @Override
         public CitySuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -61,7 +67,27 @@ public class SearchTabFragment extends Fragment {
                 holder.itemBinding.itemTag.setText("국내 여행지");
             else holder.itemBinding.itemTag.setText("해외 여행지");
 
-//            holder.itemBinding.itemContainer.setFocusable(true);
+            holder.itemBinding.itemInfoContainer.setOnClickListener(v -> {
+                if (selectedPosition == position) return;
+
+                if (selectedViewHolder != null)
+                    selectedViewHolder.itemBinding.buttonContainer.setVisibility(View.GONE);
+                holder.itemBinding.buttonContainer.setVisibility(View.VISIBLE);
+
+                selectedPosition = holder.getAdapterPosition();
+                selectedViewHolder = holder;
+            });
+
+            holder.itemBinding.leftButton.setOnClickListener(v -> {
+//                Chip chip = new Chip(getContext());
+//                chip.setText("New");
+//                chip.setChipIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_location));
+//                chip.setChipIconSize(48f);
+//                chip.setChipStrokeWidth(1f);
+
+//                binding.searchBar.addView(chip);
+                binding.searchView.hide();
+            });
         }
 
         @Override
@@ -71,6 +97,10 @@ public class SearchTabFragment extends Fragment {
 
         public void setCityList(ArrayList<DocumentSnapshot> cityList) {
             this.cityList = cityList;
+
+            selectedPosition = -1;
+            selectedViewHolder = null;
+
             notifyDataSetChanged();
         }
     }
