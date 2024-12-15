@@ -42,12 +42,13 @@ public class MainActivity extends AppCompatActivity {
         // 로그인 화면 액티비티로 전환하는 launcher
         loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 o -> {
-                    // 로그인 액티비티가 종료되면 홈 화면으로 전환하고 user 필드를 갱신함
                     user = auth.getCurrentUser();
-                    Util.fetchUserId(db, user, id -> userPreferences.edit()
-                            .putString("id", id)
-                            .apply());
-                    setHome();
+                    Util.fetchUserId(db, user, id -> {
+                        userPreferences.edit()
+                                .putString("id", id)
+                                .apply();
+                        setHome();  // ID가 저장된 후에 홈 화면으로 전환
+                    });
                 });
         loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 
