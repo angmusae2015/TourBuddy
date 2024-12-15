@@ -10,12 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="#FFFFFF">
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackgroundBorderless" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -33,7 +27,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
-            android:text="다음"
+            android:text="공유"
             android:textColor="#3897F0" />
     </RelativeLayout>
 
@@ -72,32 +66,14 @@
         android:id="@+id/edit_caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/text_location"
+        android:layout_above="@id/toggleButton"
         android:layout_margin="16dp"
         android:background="@null"
         android:hint="문구 입력..."
         android:maxLines="5"
         android:padding="8dp" />
 
-    <!-- 위치 추가 -->
-    <TextView
-        android:id="@+id/text_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/text_tag"
-        android:padding="16dp"
-        android:text="위치 추가"
-        android:drawablePadding="8dp" />
 
-    <!-- 태그 추가 -->
-    <TextView
-        android:id="@+id/text_tag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/toggleButton"
-        android:padding="16dp"
-        android:text="사람 태그하기"
-        android:drawablePadding="8dp" />
 
     <!-- 게시물 타입 선택 버튼 그룹 -->
     <com.google.android.material.button.MaterialButtonToggleGroup

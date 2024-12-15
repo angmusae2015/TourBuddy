@@ -6,16 +6,23 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="30dp">
+        android:paddingTop="30dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_gravity=""
+        android:paddingBottom="0dp">
 
         <!-- 이미지 -->
         <ImageView
-            android:id="@+id/image_view"
+            android:id="@+id/thumbnailImage"
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:src="@drawable/test"
@@ -30,7 +37,7 @@
 
             <!-- 후기 글 제목 -->
             <TextView
-                android:id="@+id/title_text_view"
+                android:id="@+id/postTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="후기 글 제목"
@@ -40,7 +47,7 @@
 
             <!-- 아이디 -->
             <TextView
-                android:id="@+id/id_text_view"
+                android:id="@+id/authorIdText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@아이디"
@@ -49,10 +56,18 @@
 
             <!-- 날짜 -->
             <TextView
-                android:id="@+id/date_text_view"
+                android:id="@+id/travelStartDateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2024년 8월 21일 부터\n2024년 8월 23일 까지"
+                android:text="2024년 8월 21일 부터"
+                android:textSize="18sp"
+                android:textColor="#777777" />
+
+            <TextView
+                android:id="@+id/travelEndDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2024년 8월 23일 까지"
                 android:textSize="18sp"
                 android:textColor="#777777" />
 
@@ -70,12 +85,48 @@
                     android:layout_marginEnd="4dp" />
 
                 <TextView
-                    android:id="@+id/location_text_view"
+                    android:id="@+id/locationText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="부산"
                     android:textSize="22sp" />
             </LinearLayout>
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="8dp">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cornerRadius="16dp"
+            app:iconPadding="8dp"
+            app:iconTint="@color/black"
+            android:textColor="@color/black"
+            android:text="필터 추가" />
+
+        <!-- Material Button 2 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deleteButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cornerRadius="16dp"
+            app:iconPadding="8dp"
+            app:iconTint="@color/black"
+            android:textColor="@color/black"
+            android:text="여행지 보기"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

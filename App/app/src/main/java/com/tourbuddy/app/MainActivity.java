@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                  transferTo(SearchTabFragment.newInstance());
             }
             else if (item.getItemId() == R.id.newPostTab) {
-                // transferTo(newPostTabFragment.newInstance());
+                 transferTo(newPostTabFragment.newInstance());
             }
             else if (item.getItemId() == R.id.myPlanTab) {
 //                 transferTo(MyPlanTabFragment.newInstance(userPreferences));
