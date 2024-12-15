@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 //                 transferTo(MyPlanTabFragment.newInstance(userPreferences));
             }
             else if (item.getItemId() == R.id.profileTab) {
-                // transferTo(profileTabFragment.newInstance());
+                 transferTo(ProfileTabFragment.newInstance());
             }
 
             return true;
